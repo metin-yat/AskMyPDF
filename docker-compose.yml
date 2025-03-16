@@ -1,0 +1,34 @@
+version: "3.4"
+services:
+  website:
+    build: /page
+    image: frontend
+    ports:
+      - 8501:8501
+      
+  model:
+    build: ollama
+    image: model-library
+    volumes:
+      - .\ollama\.ollama:/root/.ollama
+    deploy:
+          resources:
+            reservations:
+              devices:
+                - driver: nvidia 
+                  count: 1       
+                  capabilities: [gpu] 
+    ports:
+      - 11434:11434
+    entrypoint: /bin/bash -c "ollama serve & sleep 10 && ollama pull llama3.2:3b && wait"
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+
+  api:
+    build: api
+    image: backend
+    volumes:
+      - .\api\api\sessions:/api/sessions
+      - .\api\api\documents:/api/documents
+    ports:
+      - 8000:8000

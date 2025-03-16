@@ -1,0 +1,11 @@
+fastapi[standard]
+python-multipart
+uvicorn
+requests
+langchain
+langchain_core
+langchain_community
+pypdf
+fastembed
+chromadb
+langchain-chroma>=0.1.2
